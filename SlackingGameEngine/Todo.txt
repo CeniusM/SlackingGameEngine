@@ -6,6 +6,8 @@
 
 - Fix the keyboard state class
 
+- Implement a sprite system
+
 - Implement text renderer
 
 - Implement correct zoom for reselution (Maby with try catch until the zoom is small enough)
