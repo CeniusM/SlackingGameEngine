@@ -5,8 +5,8 @@ namespace SlackingGameEngine.Render;
 [StructLayout(LayoutKind.Sequential)]
 public ref struct Rect
 {
-    public short x;
-    public short y;
-    public short w;
-    public short h;
+    public ushort x;
+    public ushort y;
+    public ushort w;
+    public ushort h;
 }

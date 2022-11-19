@@ -19,6 +19,12 @@ public struct Pixel
     [FieldOffset(2)] public short Color;
 
 
+    public Pixel(short c, Color color)
+    {
+        Char = c;
+        Color = color;
+    }
+
     public Pixel(short c, byte foreground, byte background)
     {
         Char = c;

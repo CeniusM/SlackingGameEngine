@@ -5,10 +5,10 @@ namespace SlackingGameEngine.Render;
 [StructLayout(LayoutKind.Sequential)]
 public struct Coord
 {
-    public short X;
-    public short Y;
+    public ushort X;
+    public ushort Y;
 
-    public Coord(short X, short Y)
+    public Coord(ushort X, ushort Y)
     {
         this.X = X;
         this.Y = Y;

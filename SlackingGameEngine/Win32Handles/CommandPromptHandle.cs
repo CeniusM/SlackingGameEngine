@@ -35,8 +35,8 @@ internal unsafe class CommandPromptHandle
 
         Console.CursorVisible = false;
 
-        // Stack allocated struckt
-        var s = new CoordRect() { Top = 0, Left = 0, Right = buffer->width, Bottom = buffer->height };
+        // Stack allocated struct
+        var s = new CoordRect() { Left = 0, Top = 0, Right = buffer->width, Bottom = buffer->height };
         return WindowsAPI.WriteConsoleOutputW(handle, buffer->buffer, new Coord(buffer->width, buffer->height), new Coord(0, 0), ref s);
     }
 

@@ -13,12 +13,12 @@ public unsafe class SlackingGameEngine
     internal KeyboardHandle keyboardHandle;
     internal PixelBuffer* activeBuffer;
 
-    public SlackingGameEngine(short height, short width)
+    public SlackingGameEngine(ushort width, ushort height)
     {
         cmdHandle = new CommandPromptHandle();
         keyboardHandle = new KeyboardHandle();
         
-        activeBuffer = PixelBuffer.GetPixelBuffer(height, width);
+        activeBuffer = PixelBuffer.GetPixelBuffer(width, height);
         cmdHandle.SetWindowSizeToBuffer(activeBuffer);
     }
 
@@ -27,13 +27,13 @@ public unsafe class SlackingGameEngine
     /// </summary>
     /// <param name="key"></param>
     /// <returns></returns>
-    public bool GetKeyState(KeyCode key) => keyboardHandle.GetKeyState(key);
+    public bool GetKeyState(char key) => keyboardHandle.GetKeyState(key);
 
     public IntPtr GetActiveBuffer() => new IntPtr(activeBuffer);
     public void SetActiveBuffer(IntPtr* buffer) => activeBuffer = (PixelBuffer*)buffer;
 
-    public short GetWidthOfBuffer() => activeBuffer->width;
-    public short GetHeightOfBuffer() => activeBuffer->height;
+    public ushort GetWidthOfBuffer() => activeBuffer->width;
+    public ushort GetHeightOfBuffer() => activeBuffer->height;
 
     public void Start()
     {
@@ -46,13 +46,17 @@ public unsafe class SlackingGameEngine
     }
 
     public bool ShowFPS = false;
-    private Stopwatch FPSWatch = new Stopwatch();
+    public float DeltaF = 0;
+    public double Delta = 0;
+    private Stopwatch sw = new Stopwatch();
     public void RenderBuffer()
     {
         if (ShowFPS)
-            Console.Title = FPSWatch.ElapsedMilliseconds.ToString();
+            Console.Title = sw.ElapsedMilliseconds.ToString();
         cmdHandle.RenderBuffer(activeBuffer);
-        FPSWatch.Restart();
+        Delta = sw.Elapsed.TotalMilliseconds;
+        DeltaF = (float)Delta;
+        sw.Restart();
     }
 
     ~SlackingGameEngine()

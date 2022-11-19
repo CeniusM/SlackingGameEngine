@@ -6,6 +6,10 @@
 
 - Fix the keyboard state class
 
+- Fix RenderRect drawing behind the allocated array
+
+- Fix up the keyboard class and key enums
+
 - Implement a sprite system
 
 - Implement text renderer

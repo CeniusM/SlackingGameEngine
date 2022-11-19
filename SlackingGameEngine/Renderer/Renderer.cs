@@ -65,13 +65,14 @@ public unsafe class Renderer
             bufferPtr[i] = 0;
     }
 
-    public static void RenderRect(IntPtr buffer, short x, short y, short width, short height, Pixel pixel) =>
+    #region RectRender
+    public static void RenderRect(IntPtr buffer, ushort x, ushort y, ushort width, ushort height, Pixel pixel) =>
                        RenderRect((PixelBuffer*)buffer, x, y, width, height, pixel);
-    public static void RenderRect(PixelBuffer* buffer, short x, short y, short width, short height, Pixel pixel)
+    public static void RenderRect(PixelBuffer* buffer, ushort x, ushort y, ushort width, ushort height, Pixel pixel)
     {
         int Left = x < buffer->width ? x : buffer->width;
         int Top = y < buffer->height ? y : buffer->height;
-        width = x + width > buffer->width ? (short)(buffer->width - Left) : width;
+        width = x + width > buffer->width ? (ushort)(buffer->width - Left) : width;
         int Bottom = y + height > buffer->height ? buffer->height : height + Top;
 
         for (int i = Top; i < Bottom; i++)
@@ -83,6 +84,40 @@ public unsafe class Renderer
             }
         }
     }
+    #endregion
 
-    //public static void RenderText(IntPtr buffer, string text, Pixel color)
+    #region TextRender
+
+    public static void RenderText(IntPtr buffer, ushort Left, ushort Top, string text, short color)
+    {
+        ushort lenght = (ushort)text.Length;
+        Unicode[] newText = new Unicode[lenght];
+
+        for (ushort i = 0; i < lenght; i++)
+            newText[i] = (Unicode)text[i];
+
+        RenderText((PixelBuffer*)buffer, Left, Top, newText, color);
+    }
+
+    public static void RenderText(PixelBuffer* buffer, ushort Left, ushort Top, Unicode[] text, short color)
+    {
+        ushort Lenght = (ushort)text.Length;
+
+        if (buffer->height <= Top)
+            return;
+        if (buffer->width < Left + Lenght)
+            Lenght = (ushort)(buffer->width - Left);
+
+        Pixel* StartOfBuffer = &buffer->buffer[Top * buffer->width + Left];
+        Pixel pixel = new Pixel((Unicode)' ', color);
+        for (int i = 0; i < Lenght; i++)
+        {
+            pixel.Char = text[i];
+            StartOfBuffer[i] = pixel;
+        }
+
+
+    }
+    #endregion
+
 }
