@@ -17,3 +17,5 @@
 - Implement correct zoom for reselution (Maby with try catch until the zoom is small enough)
 
 - Implement Mouse controls
+
+- Implement DDA Algorithm
