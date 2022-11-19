@@ -1,0 +1,9 @@
+﻿
+
+- Fix what comes first in all the struct, classes and methods
+
+- Fix RenderRect going on the other side when going through the left side
+
+- Implement text renderer
+
+- Implement correct zoom for reselution (Maby with try catch until the zoom is small enough)
