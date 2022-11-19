@@ -23,7 +23,7 @@ class Doom
             "#      # #",
             "# ##   # #",
             "#      # #",
-            "#        #",
+            "#    P   #",
             "#  ####  #",
             "#        #",
             "####     #",
@@ -33,6 +33,13 @@ class Doom
 
         int MapWidth = MapConstruct[0].Length;
         int MapHeight = MapConstruct.Length;
+
+        const float WalkSpeed = 0.001f;
+        const float TurnSpeed = 0.01f;
+        float PlayerX = 0;
+        float PlayerY = 0;
+        // Radiants, 0 - ~6.283
+        float PlayerAngle = 0;
 
         List<string> DisblayMap = new List<string>();
         int[,] Map = new int[MapHeight, MapWidth];
@@ -46,20 +53,34 @@ class Doom
                     DisblayMap[i] += "[]";
                     Map[i, j] = 1;
                 }
+                else if (MapConstruct[i][j] == 'P')
+                {
+                    PlayerX = j;
+                    PlayerY = i;
+                    DisblayMap[i] += "..";
+                }
                 else
                     DisblayMap[i] += "..";
 
             }
         }
 
-        const float WalkSpeed = 0.01f;
-        float PlayerX = 0;
-        float PlayerY = 0;
-        float PlayerAngle = 0;
-
-        void MoveTo()
+        void Move(float offSet)
         {
+            float x = MathF.Cos(PlayerAngle + offSet) * engine.DeltaF * WalkSpeed;
+            float y = MathF.Sin(PlayerAngle + offSet) * engine.DeltaF * WalkSpeed;
 
+            PlayerX += x;
+            PlayerY += y;
+
+            if (PlayerX >= MapWidth)
+                PlayerX = MapWidth - 1;
+            else if (PlayerX < 0)
+                PlayerX = 0;
+            if (PlayerY >= MapHeight)
+                PlayerY = MapHeight - 1;
+            else if (PlayerY < 0)
+                PlayerY = 0;
         }
 
         while (true)
@@ -67,14 +88,33 @@ class Doom
             engine.Update();
 
             // Game Logic
+            // Turn
+            if (engine.GetKeyState((char)37)) // Left
+            {
+                PlayerAngle -= TurnSpeed * engine.DeltaF;
+                if (PlayerAngle < 0)
+                    PlayerAngle += 6.9f;
+            }
+            if (engine.GetKeyState((char)39)) // right
+            {
+                PlayerAngle += TurnSpeed * engine.DeltaF;
+                if (PlayerAngle > 6.9f)
+                    PlayerAngle -= 6.9f;
+            }
+
+            // Move
             if (engine.GetKeyState('W'))
-                PlayerY -= WalkSpeed * engine.DeltaF;
+                Move(0f);
             if (engine.GetKeyState('S'))
-                PlayerY += WalkSpeed * engine.DeltaF;
+                Move(3.14f);
             if (engine.GetKeyState('A'))
-                PlayerX -= WalkSpeed * engine.DeltaF;
+                Move(4.7f);
             if (engine.GetKeyState('D'))
-                PlayerX += WalkSpeed * engine.DeltaF;
+                Move(1.57f);
+
+
+
+
 
             // Render map
             for (int i = 0; i < DisblayMap.Count; i++)
