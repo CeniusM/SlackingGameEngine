@@ -18,4 +18,8 @@
 
 - Implement Mouse controls
 
+- Implement Vector struct
+
+- Implement Collision for dots, square, lines, spheres and so on
+
 - Implement DDA Algorithm
