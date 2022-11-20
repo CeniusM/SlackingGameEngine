@@ -5,7 +5,7 @@ namespace Game;
 
 class Doom
 {
-    const int ScreenWidth = 100;
+    const int ScreenWidth = 150;
     const int ScreenHeight = 50;
 
     static void Main()
@@ -38,7 +38,7 @@ class Doom
         int MapHeight = MapConstruct.Length;
 
         const float WalkSpeed = 0.001f;
-        const float TurnSpeed = 0.001f;
+        const float TurnSpeed = 0.002f;
         const float FOV = 1.57f; // 90 degress
         float PlayerX = 0;
         float PlayerY = 0;
@@ -69,9 +69,8 @@ class Doom
             }
         }
 
-        // Will be a one d line that tells us how far away a wall is, 0 = very very very close, and 1 is futher away
+        // Will be a one d line that tells us how far away a wall is, 0 very close, 100 very far
         // This tells us how tall to make the lines
-        // Range 0 - screen height
         int[] VeiwLine = new int[engine.GetWidthOfBuffer()];
 
         void Move(float offSet)
@@ -139,8 +138,8 @@ class Doom
                 const float StepSize = 0.1f;
                 float xPos = PlayerX;
                 float yPos = PlayerY;
-                float xVec = MathF.Cos(PlayerAngle + FOV / ScreenWidth * (i - ScreenWidth / 2)) * StepSize;
-                float yVec = MathF.Sin(PlayerAngle + FOV / ScreenWidth * (i - ScreenWidth / 2)) * StepSize;
+                float xVec = MathF.Cos(PlayerAngle + FOV / 2 / ScreenWidth * (i - ScreenWidth / 2)) * StepSize;
+                float yVec = MathF.Sin(PlayerAngle + FOV / 2 / ScreenWidth * (i - ScreenWidth / 2)) * StepSize;
 
                 if (i == 0)
                     DebugMessage += xVec.ToString();
@@ -152,12 +151,12 @@ class Doom
                     int tempX = (int)xPos;
                     int tempY = (int)yPos;
 
-                    if (tempX < 0 || tempY < 0 || tempX >= MapWidth || tempY >=MapHeight)
+                    if (tempX < 0 || tempY < 0 || tempX >= MapWidth || tempY >= MapHeight)
                         break;
 
-                    if (Map[tempX, (int)tempY] != 0)
+                    if (Map[tempX, tempY] != 0)
                     {
-                        VeiwLine[i] = MaxSteps / 4 - step;
+                        VeiwLine[i] = step;
                         break;
                     }
                     else
@@ -166,27 +165,51 @@ class Doom
                         yPos += yVec;
                     }
                 }
+                if (i == 0)
+                    DebugMessage += " " + VeiwLine[i].ToString();
             }
+
+            // 10 = 40 h
+            // 10 = 5 y
+
+            // 20 = 30 h
+            // 20= 10 y
 
             // Disblay VeiwLine
             for (ushort i = 0; i < ScreenWidth; i++)
-                if (VeiwLine[i] < 3)
-                    continue;
-                else if (VeiwLine[i] < 6)
-                    Renderer.RenderRect(buffer, i, (ushort)(25 - VeiwLine[i]), 1, (ushort)(VeiwLine[i] * 2), new Pixel(Renderer.LOW, ConsoleColor.White, ConsoleColor.Black));
-                else if (VeiwLine[i] < 12)
-                    Renderer.RenderRect(buffer, i, (ushort)(25 - VeiwLine[i]), 1, (ushort)(VeiwLine[i] * 2), new Pixel(Renderer.HALF, ConsoleColor.White, ConsoleColor.Black));
-                else if (VeiwLine[i] < 18)
-                    Renderer.RenderRect(buffer, i, (ushort)(25 - VeiwLine[i]), 1, (ushort)(VeiwLine[i] * 2), new Pixel(Renderer.HIGH, ConsoleColor.White, ConsoleColor.Black));
-                else if (VeiwLine[i] < 26)
-                    Renderer.RenderRect(buffer, i, (ushort)(25 - VeiwLine[i]), 1, (ushort)(VeiwLine[i] * 2), new Pixel(Renderer.FULL, ConsoleColor.White, ConsoleColor.Black));
+            {
+                if (VeiwLine[i] < ScreenHeight / 5 * 1)
+                    Renderer.RenderRect(buffer, i, (ushort)(VeiwLine[i] >> 1), 1, (ushort)(ScreenHeight - VeiwLine[i]), new Pixel(Renderer.FULL, ConsoleColor.White, ConsoleColor.Black));
+                else if (VeiwLine[i] < ScreenHeight / 5 * 2)
+                    Renderer.RenderRect(buffer, i, (ushort)(VeiwLine[i] >> 1), 1, (ushort)(ScreenHeight - VeiwLine[i]), new Pixel(Renderer.HIGH, ConsoleColor.White, ConsoleColor.Black));
+                else if (VeiwLine[i] < ScreenHeight / 5 * 3)
+                    Renderer.RenderRect(buffer, i, (ushort)(VeiwLine[i] >> 1), 1, (ushort)(ScreenHeight - VeiwLine[i]), new Pixel(Renderer.HALF, ConsoleColor.White, ConsoleColor.Black));
+                else if (VeiwLine[i] < ScreenHeight / 5 * 4)
+                    Renderer.RenderRect(buffer, i, (ushort)(VeiwLine[i] >> 1), 1, (ushort)(ScreenHeight - VeiwLine[i]), new Pixel(Renderer.LOW, ConsoleColor.White, ConsoleColor.Black));
+                else if (VeiwLine[i] < ScreenHeight / 5 * 5)
+                    Renderer.RenderRect(buffer, i, (ushort)(VeiwLine[i] >> 1), 1, (ushort)(ScreenHeight - VeiwLine[i]), new Pixel((short)'-', ConsoleColor.White, ConsoleColor.Black));
+                
+
+            }
+
+
 
 
             // Render map
-            for (int i = 0; i < DisblayMap.Count; i++)
+            for (ushort i = 0; i < DisblayMap.Count; i++)
             {
-                Renderer.RenderText(buffer, 0, (ushort)i, DisblayMap[i], Color.GetColor(ConsoleColor.White, ConsoleColor.Black));
+                Renderer.RenderText(buffer, 0, i, DisblayMap[i], Color.GetColor(ConsoleColor.White, ConsoleColor.Black));
             }
+
+            //for (ushort i = 0; i < 10; i++)
+            //{
+            //    for (ushort j = 0; j < 10; j++)
+            //    {
+            //        Renderer.RenderText(buffer, j, (ushort)(i + 10), Map[i, j] + "", Color.GetColor(ConsoleColor.White, ConsoleColor.Black));
+
+            //    }
+            //}
+
 
             // Player
             int x = (int)PlayerX;
