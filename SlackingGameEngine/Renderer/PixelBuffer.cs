@@ -18,7 +18,10 @@ public unsafe struct PixelBuffer
         bufferSize = (uint)(Height * Width);
     }
 
-    public static PixelBuffer* GetPixelBuffer(ushort Width, ushort Height)
+    /// <summary>
+    /// Returns a new allocated PixelBuffer
+    /// </summary>
+    public static PixelBuffer* GetNewPixelBuffer(ushort Width, ushort Height)
     {
         // Argument check
         //if (Width < 1 || Height< 1)
@@ -40,12 +43,11 @@ public unsafe struct PixelBuffer
         return buffer;
     }
 
+    /// <summary>
+    /// Sets the Pixel Array and the varibles that comes with it to the new desired values
+    /// </summary>
     public static void SetPixelBuffer(PixelBuffer* buffer, ushort Width, ushort Height)
     {
-        // Argument check
-        if (Height < 1 || Width < 1)
-            throw new ArgumentException("Neither height nor width can be blow 1");
-
         // Delete buffer if it is allready allocated
         DeletePixelBuffer(buffer);
 
@@ -57,16 +59,24 @@ public unsafe struct PixelBuffer
         ClearBuffer(buffer);
     }
 
+    /// <summary>
+    /// Deltes both the Pixel Array and the PixelBuffer struct holding the data
+    /// </summary>
     public static void DeletePixelBuffer(PixelBuffer* buffer)
     {
         if ((uint)buffer->buffer != 0)
             Marshal.FreeHGlobal((IntPtr)buffer->buffer);
+        if ((uint)buffer != 0)
+            Marshal.FreeHGlobal((IntPtr)buffer);
     }
 
+    /// <summary>
+    /// Sets all the values in the Pixel Array to 0
+    /// </summary>
     public static void ClearBuffer(PixelBuffer* buffer)
     {
         if ((uint)buffer->buffer == 0)
-            throw new NullReferenceException("Buffer have not been initialized");
+            throw new NullReferenceException("Buffer haven't been initialized");
 
         uint* tempBufferPtr = (uint*)buffer->buffer;
         for (int i = 0; i < buffer->bufferSize; i++)

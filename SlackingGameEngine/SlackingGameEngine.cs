@@ -18,7 +18,7 @@ public unsafe class SlackingGameEngine
         cmdHandle = new CommandPromptHandle();
         keyboardHandle = new KeyboardHandle();
         
-        activeBuffer = PixelBuffer.GetPixelBuffer(width, height);
+        activeBuffer = PixelBuffer.GetNewPixelBuffer(width, height);
         cmdHandle.SetWindowSizeToBuffer(activeBuffer);
     }
 
