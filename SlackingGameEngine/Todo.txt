@@ -12,6 +12,10 @@
 
 - Fix the flags of the command prompt (Mouse selecting)
 
+- Clean up the CommandPrompt handle
+
+- Added more acsesebility for the user to change the command prompt via the CommandPropmt Handlers methods
+
 - Implement a sprite system
 
 - Implement text renderer

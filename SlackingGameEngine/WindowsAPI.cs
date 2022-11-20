@@ -4,12 +4,6 @@ using SlackingGameEngine.Render;
 
 namespace SlackingGameEngine;
 
-/*
- * -----------------------------
- * All thanks to other people :D
- * -----------------------------
- */
-
 internal unsafe class WindowsAPI
 {
     [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
@@ -29,87 +23,49 @@ internal unsafe class WindowsAPI
       Coord dwBufferSize,
       Coord dwBufferCoord,
       ref CoordRect lpWriteRegion);
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
 
 
+    internal const int STD_OUTPUT_HANDLE = -11;
+    internal const int TMPF_TRUETYPE = 4;
+    internal const int LF_FACESIZE = 32;
+    internal static IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
 
-    public static class ConsoleHelper
+    [DllImport("kernel32.dll", SetLastError = true)]
+    internal static extern IntPtr GetStdHandle(int nStdHandle);
+
+    [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    internal static extern bool GetCurrentConsoleFontEx(
+           IntPtr consoleOutput,
+           bool maximumWindow,
+           ref CONSOLE_FONT_INFO_EX lpConsoleCurrentFontEx);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    internal static extern bool SetCurrentConsoleFontEx(
+           IntPtr consoleOutput,
+           bool maximumWindow,
+           CONSOLE_FONT_INFO_EX consoleCurrentFontEx);
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct COORD
     {
-        private const int FixedWidthTrueType = 54;
-        private const int StandardOutputHandle = -11;
+        internal short X;
+        internal short Y;
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        internal static extern IntPtr GetStdHandle(int nStdHandle);
-
-        [return: MarshalAs(UnmanagedType.Bool)]
-        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        internal static extern bool SetCurrentConsoleFontEx(IntPtr hConsoleOutput, bool MaximumWindow, ref FontInfo ConsoleCurrentFontEx);
-
-        [return: MarshalAs(UnmanagedType.Bool)]
-        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        internal static extern bool GetCurrentConsoleFontEx(IntPtr hConsoleOutput, bool MaximumWindow, ref FontInfo ConsoleCurrentFontEx);
-
-
-        private static readonly IntPtr ConsoleOutputHandle = GetStdHandle(StandardOutputHandle);
-
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public struct FontInfo
+        internal COORD(short x, short y)
         {
-            internal int cbSize;
-            internal int FontIndex;
-            internal short FontWidth;
-            public short FontSize;
-            public int FontFamily;
-            public int FontWeight;
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
-            //[MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.wc, SizeConst = 32)]
-            public string FontName;
+            X = x;
+            Y = y;
         }
+    }
 
-        public static FontInfo[] SetCurrentFont(string font, short fontSize = 0)
-        {
-            Console.WriteLine("Set Current Font: " + font);
-
-            FontInfo before = new FontInfo
-            {
-                cbSize = Marshal.SizeOf<FontInfo>()
-            };
-
-            if (GetCurrentConsoleFontEx(ConsoleOutputHandle, false, ref before))
-            {
-
-                FontInfo set = new FontInfo
-                {
-                    cbSize = Marshal.SizeOf<FontInfo>(),
-                    FontIndex = 0,
-                    FontFamily = FixedWidthTrueType,
-                    FontName = font,
-                    FontWeight = 400,
-                    FontSize = fontSize > 0 ? fontSize : before.FontSize
-                };
-
-                // Get some settings from current font.
-                if (!SetCurrentConsoleFontEx(ConsoleOutputHandle, false, ref set))
-                {
-                    var ex = Marshal.GetLastWin32Error();
-                    Console.WriteLine("Set error " + ex);
-                    throw new System.ComponentModel.Win32Exception(ex);
-                }
-
-                FontInfo after = new FontInfo
-                {
-                    cbSize = Marshal.SizeOf<FontInfo>()
-                };
-                GetCurrentConsoleFontEx(ConsoleOutputHandle, false, ref after);
-
-                return new[] { before, set, after };
-            }
-            else
-            {
-                var er = Marshal.GetLastWin32Error();
-                Console.WriteLine("Get error " + er);
-                throw new System.ComponentModel.Win32Exception(er);
-            }
-        }
+    [StructLayout(LayoutKind.Sequential)]
+    internal unsafe struct CONSOLE_FONT_INFO_EX
+    {
+        internal uint cbSize;
+        internal uint nFont;
+        internal COORD dwFontSize;
+        internal int FontFamily;
+        internal int FontWeight;
+        internal fixed char FaceName[LF_FACESIZE];
     }
 }

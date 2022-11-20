@@ -17,7 +17,7 @@ public unsafe class SlackingGameEngine
     {
         cmdHandle = new CommandPromptHandle();
         keyboardHandle = new KeyboardHandle();
-        
+
         activeBuffer = PixelBuffer.GetNewPixelBuffer(width, height);
         cmdHandle.SetWindowSizeToBuffer(activeBuffer);
     }
@@ -34,6 +34,11 @@ public unsafe class SlackingGameEngine
 
     public ushort GetWidthOfBuffer() => activeBuffer->width;
     public ushort GetHeightOfBuffer() => activeBuffer->height;
+
+    /// <summary>
+    /// Return the current aspect ratio of the command prompt ( x / y )
+    /// </summary>
+    public float GetAspectRatio() => cmdHandle.GetAspectRatio();
 
     public void Start()
     {
