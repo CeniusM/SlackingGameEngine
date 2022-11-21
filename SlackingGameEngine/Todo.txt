@@ -16,6 +16,10 @@
 
 - Added more acsesebility for the user to change the command prompt via the CommandPropmt Handlers methods
 
+- Implement an array of shades, so 0 is dark and the heigher the lighter
+
+- Implement a RGBA array with the Pixel(Reprsented as uint) that represents that RGBA value the most by using an algorithm to cauculate them
+
 - Implement a sprite system
 
 - Implement text renderer
@@ -29,3 +33,7 @@
 - Implement Collision for dots, square, lines, spheres and so on
 
 - Implement DDA Algorithm
+
+- Implement a sound system
+
+- Implement it so that the engine can allocate unmanged code it, it self will clear up after use

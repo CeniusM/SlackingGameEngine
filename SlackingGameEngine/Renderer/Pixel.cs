@@ -19,6 +19,19 @@ public struct Pixel
     [FieldOffset(2)] public short Color;
 
 
+    public unsafe Pixel(uint pixel)
+    {
+        short* ptr = (short*)&pixel;
+        Char = ptr[0];
+        Color = ptr[1];
+    }
+
+    public Pixel(Pixel pixel)
+    {
+        Char = pixel.Char;
+        Color = pixel.Color;
+    }
+
     public Pixel(short c, Color color)
     {
         Char = c;

@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace SlackingGameEngine.Win32Handles;
 
-internal class KeyboardHandle
+internal unsafe class KeyboardHandle
 {
     public enum VirtualKeyStates : int
     {
@@ -198,20 +198,20 @@ internal class KeyboardHandle
 
     [DllImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
-    static extern bool GetKeyboardState(byte[] lpKeyState);
+    static extern bool GetKeyboardState(byte* lpKeyState);
 
     [DllImport("user32.dll")]
     static extern short GetKeyState(VirtualKeyStates nVirtKey);
 
-    internal byte[] keyStates;
+    internal byte* keyStates;
 
     internal KeyboardHandle()
     {
-        keyStates = new byte[256];
+        keyStates = (byte*)Marshal.AllocHGlobal(256);
         GetKeyboardState(keyStates);
     }
 
-    public void Update()
+    internal void Update()
     {
         GetKeyState(VirtualKeyStates.VK_SPACE);
         GetKeyboardState(keyStates);
@@ -222,9 +222,14 @@ internal class KeyboardHandle
     /// </summary>
     /// <param name="key"></param>
     /// <returns></returns>
-    public bool GetKeyState(char key)
+    internal bool GetKeyState(char key)
     {
         return (keyStates[(int)key] & 0x80) != 0;
         //return keyStates[(int)key] != 0;
+    }
+
+    ~KeyboardHandle()
+    {
+        Marshal.FreeHGlobal((IntPtr)keyStates);
     }
 }

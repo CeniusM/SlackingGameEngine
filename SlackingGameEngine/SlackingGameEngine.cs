@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using SlackingGameEngine.Win32Handles;
 using SlackingGameEngine.Render;
+using SlackingGameEngine.Utility;
 
 namespace SlackingGameEngine;
 
@@ -12,6 +13,8 @@ public unsafe class SlackingGameEngine
     internal CommandPromptHandle cmdHandle;
     internal KeyboardHandle keyboardHandle;
     internal PixelBuffer* activeBuffer;
+    internal Allocator allocator;
+    public KeyBoard KeyBoard;
 
     public SlackingGameEngine(ushort width, ushort height)
     {
@@ -20,6 +23,10 @@ public unsafe class SlackingGameEngine
 
         activeBuffer = PixelBuffer.GetNewPixelBuffer(width, height);
         cmdHandle.SetWindowSizeToBuffer(activeBuffer);
+
+        allocator = new Allocator();
+
+        KeyBoard = new KeyBoard(allocator);
     }
 
     /// <summary>
@@ -48,6 +55,7 @@ public unsafe class SlackingGameEngine
     public void Update()
     {
         keyboardHandle.Update();
+        KeyBoard.Update(keyboardHandle.keyStates);
     }
 
     public bool ShowFPS = false;
@@ -67,5 +75,6 @@ public unsafe class SlackingGameEngine
     ~SlackingGameEngine()
     {
         PixelBuffer.DeletePixelBuffer(activeBuffer);
+        allocator.Clear();
     }
 }

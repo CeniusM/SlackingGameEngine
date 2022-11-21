@@ -1,17 +1,24 @@
 ﻿using SlackingGameEngine;
 using SlackingGameEngine.Render;
+using SlackingGameEngine.Utility;
 
 namespace Game;
 
 class Doom
 {
-    const int ScreenWidth = 150;
-    const int ScreenHeight = 50;
+    const int ScreenWidth = 300;
+    const int ScreenHeight = 100;
+
+    const float XSizeOfMap = 0.002f * ScreenWidth;
+    const float YSizeOfMap = 0.002f * ScreenHeight;
+    const float SizeOfPlayer = 0.0001f;
 
     static void Main()
     {
         // Init engine
         SlackingGameEngine.SlackingGameEngine engine = new SlackingGameEngine.SlackingGameEngine(ScreenWidth, ScreenHeight);
+
+        KeyBoard keyBoard = engine.KeyBoard;
 
         engine.Start();
         engine.ShowFPS = true;
@@ -44,6 +51,8 @@ class Doom
         float PlayerY = 0;
         // Radiants, 0 - ~6.283
         float PlayerAngle = 0;
+
+        bool ShowMap = true;
 
         List<string> DisblayMap = new List<string>();
         int[,] Map = new int[MapHeight, MapWidth];
@@ -98,13 +107,13 @@ class Doom
 
             // Game Logic
             // Turn
-            if (engine.GetKeyState((char)37)) // Left
+            if (keyBoard.IsKeyPressed(37)) // Left
             {
                 PlayerAngle -= TurnSpeed * engine.DeltaF;
                 if (PlayerAngle < 0)
                     PlayerAngle += 6.28f;
             }
-            if (engine.GetKeyState((char)39)) // right
+            if (keyBoard.IsKeyPressed(39)) // right
             {
                 PlayerAngle += TurnSpeed * engine.DeltaF;
                 if (PlayerAngle > 6.28f)
@@ -112,14 +121,19 @@ class Doom
             }
 
             // Move
-            if (engine.GetKeyState('W'))
+            if (keyBoard.IsKeyPressed('W'))
                 Move(0f);
-            if (engine.GetKeyState('S'))
+            if (keyBoard.IsKeyPressed('S'))
                 Move(3.14f);
-            if (engine.GetKeyState('A'))
+            if (keyBoard.IsKeyPressed('A'))
                 Move(4.7f);
-            if (engine.GetKeyState('D'))
+            if (keyBoard.IsKeyPressed('D'))
                 Move(1.57f);
+
+            if (keyBoard.IsKeyJustPressed(9))
+                ShowMap = true;
+            if (keyBoard.IsKeyJustReleased(9))
+                ShowMap = false;
 
 
 
@@ -128,8 +142,9 @@ class Doom
 
             // Render world
             // Floor
-            Renderer.RenderRect(buffer, 0, 30, ScreenWidth, 10, new Pixel(Renderer.LOW, ConsoleColor.Green, ConsoleColor.Black));
-            Renderer.RenderRect(buffer, 0, 40, ScreenWidth, 10, new Pixel(Renderer.HALF, ConsoleColor.Green, ConsoleColor.Black));
+            Renderer.RenderRect(buffer, 0, (ushort)(ScreenHeight - ScreenHeight / 10 * 3), ScreenWidth, (ushort)(ScreenHeight / 10), new Pixel(Renderer.LOW, ConsoleColor.DarkGreen, ConsoleColor.Black));
+            Renderer.RenderRect(buffer, 0, (ushort)(ScreenHeight - ScreenHeight / 10 * 2), ScreenWidth, (ushort)(ScreenHeight / 10), new Pixel(Renderer.LOW, ConsoleColor.Green, ConsoleColor.Black));
+            Renderer.RenderRect(buffer, 0, (ushort)(ScreenHeight - ScreenHeight / 10 * 1), ScreenWidth, (ushort)(ScreenHeight / 10), new Pixel(Renderer.HALF, ConsoleColor.DarkGreen, ConsoleColor.Black));
 
             // Generate VeiwLine
             for (ushort i = 0; i < ScreenWidth; i++)
@@ -138,14 +153,15 @@ class Doom
                 const float StepSize = 0.1f;
                 float xPos = PlayerX;
                 float yPos = PlayerY;
-                float xVec = MathF.Cos(PlayerAngle + FOV / 2 / ScreenWidth * (i - ScreenWidth / 2)) * StepSize;
-                float yVec = MathF.Sin(PlayerAngle + FOV / 2 / ScreenWidth * (i - ScreenWidth / 2)) * StepSize;
+                float xVec = MathF.Cos(PlayerAngle + FOV / ScreenWidth * (i - ScreenWidth / 2)) * StepSize;
+                float yVec = MathF.Sin(PlayerAngle + FOV / ScreenWidth * (i - ScreenWidth / 2)) * StepSize;
 
                 if (i == 0)
                     DebugMessage += xVec.ToString();
 
                 // Cast ray and set distace value
                 const int MaxSteps = 100;
+                VeiwLine[i] = MaxSteps;
                 for (int step = 0; step < MaxSteps; step++)
                 {
                     int tempX = (int)xPos;
@@ -179,16 +195,16 @@ class Doom
             for (ushort i = 0; i < ScreenWidth; i++)
             {
                 if (VeiwLine[i] < ScreenHeight / 5 * 1)
-                    Renderer.RenderRect(buffer, i, (ushort)(VeiwLine[i] >> 1), 1, (ushort)(ScreenHeight - VeiwLine[i]), new Pixel(Renderer.FULL, ConsoleColor.White, ConsoleColor.Black));
+                    Renderer.RenderRect(buffer, i, (ushort)(VeiwLine[i] >> 1), 1, (ushort)(ScreenHeight - VeiwLine[i]), new Pixel(Renderer.HIGH, ConsoleColor.White, ConsoleColor.DarkGray));
                 else if (VeiwLine[i] < ScreenHeight / 5 * 2)
                     Renderer.RenderRect(buffer, i, (ushort)(VeiwLine[i] >> 1), 1, (ushort)(ScreenHeight - VeiwLine[i]), new Pixel(Renderer.HIGH, ConsoleColor.White, ConsoleColor.Black));
                 else if (VeiwLine[i] < ScreenHeight / 5 * 3)
-                    Renderer.RenderRect(buffer, i, (ushort)(VeiwLine[i] >> 1), 1, (ushort)(ScreenHeight - VeiwLine[i]), new Pixel(Renderer.HALF, ConsoleColor.White, ConsoleColor.Black));
+                    Renderer.RenderRect(buffer, i, (ushort)(VeiwLine[i] >> 1), 1, (ushort)(ScreenHeight - VeiwLine[i]), new Pixel(Renderer.HALF, ConsoleColor.White, ConsoleColor.DarkGray));
                 else if (VeiwLine[i] < ScreenHeight / 5 * 4)
                     Renderer.RenderRect(buffer, i, (ushort)(VeiwLine[i] >> 1), 1, (ushort)(ScreenHeight - VeiwLine[i]), new Pixel(Renderer.LOW, ConsoleColor.White, ConsoleColor.Black));
                 else if (VeiwLine[i] < ScreenHeight / 5 * 5)
                     Renderer.RenderRect(buffer, i, (ushort)(VeiwLine[i] >> 1), 1, (ushort)(ScreenHeight - VeiwLine[i]), new Pixel((short)'-', ConsoleColor.White, ConsoleColor.Black));
-                
+
 
             }
 
@@ -196,27 +212,44 @@ class Doom
 
 
             // Render map
-            for (ushort i = 0; i < DisblayMap.Count; i++)
-            {
-                Renderer.RenderText(buffer, 0, i, DisblayMap[i], Color.GetColor(ConsoleColor.White, ConsoleColor.Black));
-            }
-
-            //for (ushort i = 0; i < 10; i++)
+            //if (ShowMap)
+            //for (ushort i = 0; i < DisblayMap.Count; i++)
             //{
-            //    for (ushort j = 0; j < 10; j++)
-            //    {
-            //        Renderer.RenderText(buffer, j, (ushort)(i + 10), Map[i, j] + "", Color.GetColor(ConsoleColor.White, ConsoleColor.Black));
-
-            //    }
+            //    Renderer.RenderText(buffer, 0, i, DisblayMap[i], Color.GetColor(ConsoleColor.White, ConsoleColor.Black));
             //}
+            //// Player
+            //int x = (int)PlayerX;
+            //int y = (int)PlayerY;
+            //if (ShowMap)
+            //if (x < MapWidth && x > -1 && y < MapHeight && y > -1)
+            //    Renderer.RenderText(buffer, (ushort)(x * 2), (ushort)y, "!!", Color.GetColor(ConsoleColor.Red, ConsoleColor.Black));
+            if (ShowMap)
+            {
+                ushort tileSizeX = (ushort)(MapWidth * XSizeOfMap);
+                ushort tileSizeY = (ushort)(MapHeight * YSizeOfMap);
 
+                for (int i = 0; i < MapWidth; i++)
+                {
+                    for (int j = 0; j < MapHeight; j++)
+                    {
+                        if (Map[j, i] == 0)
+                            Renderer.RenderRect(buffer, (ushort)(tileSizeX * i), (ushort)(tileSizeY * j), tileSizeX, tileSizeY, 
+                                new Pixel(Renderer.FULL, Color.GetColor(ConsoleColor.Green, 0)));
+                        else if (Map[j, i] == 1)
+                            Renderer.RenderRect(buffer, (ushort)(tileSizeX * i), (ushort)(tileSizeY * j), tileSizeX, tileSizeY, 
+                                new Pixel(Renderer.FULL, ConsoleColor.DarkGreen, 0));
 
-            // Player
-            int x = (int)PlayerX;
-            int y = (int)PlayerY;
-            if (x < MapWidth && x > -1 && y < MapHeight && y > -1)
-                Renderer.RenderText(buffer, (ushort)(x * 2), (ushort)y, "!!", Color.GetColor(ConsoleColor.Red, ConsoleColor.Black));
+                    }
+                }
 
+                // Render player
+                ushort xSize = (ushort)(MapWidth * XSizeOfMap);
+                ushort ySize = (ushort)(MapHeight * YSizeOfMap);
+                ushort x = (ushort)((float)PlayerX * MapWidth * XSizeOfMap);
+                ushort y = (ushort)((float)PlayerY * MapHeight * YSizeOfMap);
+                Renderer.RenderRect(buffer, x, y, xSize, ySize, new Pixel(Renderer.FULL, ConsoleColor.Red, 0));
+
+            }
 
 
 
