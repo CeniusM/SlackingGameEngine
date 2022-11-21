@@ -37,7 +37,7 @@ internal class Allocator
         return AllocatedMemory.TryGetValue(ptr, out int size) ? size : -1;
     }
 
-    internal void Clear()
+    internal void FreeAllPointers()
     {
         var Values = AllocatedMemory.ToList();
         for (int i = 0; i < Values.Count(); i++)

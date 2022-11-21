@@ -150,7 +150,7 @@ class Doom
             for (ushort i = 0; i < ScreenWidth; i++)
             {
                 // Get vector for ray
-                const float StepSize = 0.1f;
+                const float StepSize = 0.001f;
                 float xPos = PlayerX;
                 float yPos = PlayerY;
                 float xVec = MathF.Cos(PlayerAngle + FOV / ScreenWidth * (i - ScreenWidth / 2)) * StepSize;
@@ -160,7 +160,7 @@ class Doom
                     DebugMessage += xVec.ToString();
 
                 // Cast ray and set distace value
-                const int MaxSteps = 100;
+                const int MaxSteps = 10000;
                 VeiwLine[i] = MaxSteps;
                 for (int step = 0; step < MaxSteps; step++)
                 {
@@ -172,7 +172,7 @@ class Doom
 
                     if (Map[tempX, tempY] != 0)
                     {
-                        VeiwLine[i] = step;
+                        VeiwLine[i] = step / 10;
                         break;
                     }
                     else
@@ -194,16 +194,18 @@ class Doom
             // Disblay VeiwLine
             for (ushort i = 0; i < ScreenWidth; i++)
             {
-                if (VeiwLine[i] < ScreenHeight / 5 * 1)
-                    Renderer.RenderRect(buffer, i, (ushort)(VeiwLine[i] >> 1), 1, (ushort)(ScreenHeight - VeiwLine[i]), new Pixel(Renderer.HIGH, ConsoleColor.White, ConsoleColor.DarkGray));
-                else if (VeiwLine[i] < ScreenHeight / 5 * 2)
-                    Renderer.RenderRect(buffer, i, (ushort)(VeiwLine[i] >> 1), 1, (ushort)(ScreenHeight - VeiwLine[i]), new Pixel(Renderer.HIGH, ConsoleColor.White, ConsoleColor.Black));
-                else if (VeiwLine[i] < ScreenHeight / 5 * 3)
-                    Renderer.RenderRect(buffer, i, (ushort)(VeiwLine[i] >> 1), 1, (ushort)(ScreenHeight - VeiwLine[i]), new Pixel(Renderer.HALF, ConsoleColor.White, ConsoleColor.DarkGray));
-                else if (VeiwLine[i] < ScreenHeight / 5 * 4)
-                    Renderer.RenderRect(buffer, i, (ushort)(VeiwLine[i] >> 1), 1, (ushort)(ScreenHeight - VeiwLine[i]), new Pixel(Renderer.LOW, ConsoleColor.White, ConsoleColor.Black));
-                else if (VeiwLine[i] < ScreenHeight / 5 * 5)
-                    Renderer.RenderRect(buffer, i, (ushort)(VeiwLine[i] >> 1), 1, (ushort)(ScreenHeight - VeiwLine[i]), new Pixel((short)'-', ConsoleColor.White, ConsoleColor.Black));
+                ushort line = (ushort)(100 - VeiwLine[i]);
+                Renderer.RenderRect(buffer, i, (ushort)(line), 1, (ushort)(line), new Pixel(Renderer.HIGH, ConsoleColor.White, ConsoleColor.DarkGray));
+                //if (VeiwLine[i] < ScreenHeight / 5 * 1)
+                //    Renderer.RenderRect(buffer, i, (ushort)(VeiwLine[i] >> 1), 1, (ushort)(ScreenHeight - VeiwLine[i]), new Pixel(Renderer.HIGH, ConsoleColor.White, ConsoleColor.DarkGray));
+                //else if (VeiwLine[i] < ScreenHeight / 5 * 2)
+                //    Renderer.RenderRect(buffer, i, (ushort)(VeiwLine[i] >> 1), 1, (ushort)(ScreenHeight - VeiwLine[i]), new Pixel(Renderer.HIGH, ConsoleColor.White, ConsoleColor.Black));
+                //else if (VeiwLine[i] < ScreenHeight / 5 * 3)
+                //    Renderer.RenderRect(buffer, i, (ushort)(VeiwLine[i] >> 1), 1, (ushort)(ScreenHeight - VeiwLine[i]), new Pixel(Renderer.HALF, ConsoleColor.White, ConsoleColor.DarkGray));
+                //else if (VeiwLine[i] < ScreenHeight / 5 * 4)
+                //    Renderer.RenderRect(buffer, i, (ushort)(VeiwLine[i] >> 1), 1, (ushort)(ScreenHeight - VeiwLine[i]), new Pixel(Renderer.LOW, ConsoleColor.White, ConsoleColor.Black));
+                //else if (VeiwLine[i] < ScreenHeight / 5 * 5)
+                //    Renderer.RenderRect(buffer, i, (ushort)(VeiwLine[i] >> 1), 1, (ushort)(ScreenHeight - VeiwLine[i]), new Pixel((short)'-', ConsoleColor.White, ConsoleColor.Black));
 
 
             }
@@ -233,10 +235,10 @@ class Doom
                     for (int j = 0; j < MapHeight; j++)
                     {
                         if (Map[j, i] == 0)
-                            Renderer.RenderRect(buffer, (ushort)(tileSizeX * i), (ushort)(tileSizeY * j), tileSizeX, tileSizeY, 
+                            Renderer.RenderRect(buffer, (ushort)(tileSizeX * i), (ushort)(tileSizeY * j), tileSizeX, tileSizeY,
                                 new Pixel(Renderer.FULL, Color.GetColor(ConsoleColor.Green, 0)));
                         else if (Map[j, i] == 1)
-                            Renderer.RenderRect(buffer, (ushort)(tileSizeX * i), (ushort)(tileSizeY * j), tileSizeX, tileSizeY, 
+                            Renderer.RenderRect(buffer, (ushort)(tileSizeX * i), (ushort)(tileSizeY * j), tileSizeX, tileSizeY,
                                 new Pixel(Renderer.FULL, ConsoleColor.DarkGreen, 0));
 
                     }

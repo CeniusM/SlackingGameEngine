@@ -5,6 +5,14 @@ namespace SlackingGameEngine.Render;
 [StructLayout(LayoutKind.Sequential)]
 public struct Color
 {
+    #region Colors
+
+    // Not implementet
+
+    public const uint FGBlack = (uint)ConsoleColor.Black;
+
+    #endregion
+
     public short Value;
 
     public Color(short c, byte foreground, byte background)
