@@ -10,12 +10,20 @@ public unsafe struct PixelBuffer
     internal ushort width;
     internal ushort height;
 
-    public PixelBuffer(ushort Width, ushort Height, Pixel* buffer)
+    internal PixelBuffer(PixelBuffer* buffer)
+    {
+        this.width = buffer->width;
+        this.height = buffer->width;
+        this.buffer = buffer->buffer;
+        this.bufferSize = buffer->bufferSize;
+    }
+
+    internal PixelBuffer(ushort Width, ushort Height, Pixel* buffer)
     {
         this.width = Width;
         this.height = Height;
         this.buffer = buffer;
-        bufferSize = (uint)(Height * Width);
+        this.bufferSize = (uint)(Height * Width);
     }
 
     /// <summary>
@@ -46,10 +54,10 @@ public unsafe struct PixelBuffer
     /// <summary>
     /// Sets the Pixel Array and the varibles that comes with it to the new desired values
     /// </summary>
-    public static void SetPixelBuffer(PixelBuffer* buffer, ushort Width, ushort Height)
+    public static void SetBuffer(PixelBuffer* buffer, ushort Width, ushort Height)
     {
         // Delete buffer if it is allready allocated
-        DeletePixelBuffer(buffer);
+        DeleteBuffer(buffer);
 
         // Set buffer varibles
         buffer->height = Height;
@@ -62,7 +70,7 @@ public unsafe struct PixelBuffer
     /// <summary>
     /// Deltes both the Pixel Array and the PixelBuffer struct holding the data
     /// </summary>
-    public static void DeletePixelBuffer(PixelBuffer* buffer)
+    public static void DeleteBuffer(PixelBuffer* buffer)
     {
         if ((uint)buffer->buffer != 0)
             Marshal.FreeHGlobal((IntPtr)buffer->buffer);
