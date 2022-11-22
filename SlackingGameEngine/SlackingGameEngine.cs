@@ -75,6 +75,6 @@ public unsafe class SlackingGameEngine
     ~SlackingGameEngine()
     {
         PixelBuffer.DeleteBuffer(activeBuffer);
-        allocator.Clear();
+        allocator.FreeAllPointers();
     }
 }

@@ -1,5 +1,6 @@
 ﻿//#define ColorPalette
 #define Shades
+//#define RGB
 
 using SlackingGameEngine;
 using SlackingGameEngine.Render;
@@ -60,6 +61,13 @@ for (int i = 0; i < 4; i++)
         }
     }
 }
+
+#elif RGB
+
+Pixel[,,] rgb = new Pixe[16,16,16];
+
+// Generate
+
 
 #endif
 
