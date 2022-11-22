@@ -11,6 +11,11 @@ internal class Allocator
 
     internal long BytesAllocated { get; private set; }
 
+    internal Allocator()
+    {
+
+    }
+
     internal IntPtr GetUnsafeMemory(int bytes)
     {
         IntPtr ptr = Marshal.AllocHGlobal(bytes);
