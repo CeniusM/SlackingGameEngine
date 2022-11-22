@@ -51,13 +51,13 @@ for (int i = 0; i < 4; i++)
         for (int k = 0; k < 4; k++)
         {
             if (i == 0)
-                shades[(k * 4 * 4) + (j * 4) + i] = new Pixel(Renderer.FULL, colorShades[k], colorShades[j]);
+                shades[(k * 4 * 4) + (j * 4) + i] = new Pixel(Unicode.FULL, colorShades[k], colorShades[j]);
             else if (i == 1)
-                shades[(k * 4 * 4) + (j * 4) + i] = new Pixel(Renderer.HIGH, colorShades[k], colorShades[j]);
+                shades[(k * 4 * 4) + (j * 4) + i] = new Pixel(Unicode.HIGH, colorShades[k], colorShades[j]);
             else if (i == 2)
-                shades[(k * 4 * 4) + (j * 4) + i] = new Pixel(Renderer.HALF, colorShades[k], colorShades[j]);
+                shades[(k * 4 * 4) + (j * 4) + i] = new Pixel(Unicode.HALF, colorShades[k], colorShades[j]);
             else if (i == 3)
-                shades[(k * 4 * 4) + (j * 4) + i] = new Pixel(Renderer.LOW, colorShades[k], colorShades[j]);
+                shades[(k * 4 * 4) + (j * 4) + i] = new Pixel(Unicode.LOW, colorShades[k], colorShades[j]);
         }
     }
 }
@@ -80,7 +80,7 @@ while (true)
     {
         for (ushort j = 0; j < 16; j++)
         {
-            Renderer.RenderRect(buffer, (ushort)(i * 10), (ushort)(j * 10), 16, 10, new Pixel(Renderer.HALF, (byte)i, (byte)j));
+            Renderer.RenderRect(buffer, (ushort)(i * 10), (ushort)(j * 10), 16, 10, new Pixel(Unicode.HALF, (byte)i, (byte)j));
         }
     }
 #elif Shades
@@ -94,7 +94,7 @@ while (true)
 
                 //for (int k = 0; k < 4; k++)
                 //{
-                //    Renderer.RenderRect(buffer, (ushort)(k * 2), 0, 2, 10, new Pixel(Renderer.FULL, colorShades[k], ConsoleColor.Black));
+                //    Renderer.RenderRect(buffer, (ushort)(k * 2), 0, 2, 10, new Pixel(Unicode.FULL, colorShades[k], ConsoleColor.Black));
                 //}
 
                 // Not implemented, but will contain a range of (FULL, HIGH, HALF, LOW) * ForeGround(White, Gray, DarkGray, Dark) * BackGround(White, Gray, DarkGray, Dark)

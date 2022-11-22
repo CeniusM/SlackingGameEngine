@@ -26,10 +26,18 @@ class Program
             Renderer.Clear(buffer, new Pixel());
 
             if (game.GetKeyState('W'))
-                Renderer.RenderRect(buffer, x, y, 50, 25, new Pixel(Renderer.HIGH, ConsoleColor.Green, ConsoleColor.Black));
+                Renderer.RenderRect(buffer, x, y, 50, 25, new Pixel(Unicode.HIGH, ConsoleColor.Green, ConsoleColor.Black));
             else
-                Renderer.RenderRect(buffer, x, y, 50, 25, new Pixel(Renderer.HIGH, ConsoleColor.Red, ConsoleColor.Black));
+                Renderer.RenderRect(buffer, x, y, 50, 25, new Pixel(Unicode.HIGH, ConsoleColor.Red, ConsoleColor.Black));
 
+            // Vertical
+            Renderer.RenderLine(buffer, 10, 10, 30, 10, 1, new Pixel((short)'#', Color.FG_Black, ConsoleColor.Red));
+
+            // Sloping
+            Renderer.RenderLine(buffer, 10, 10, 30, 30, 1, new Pixel((short)'#', Color.FG_Black, ConsoleColor.Red));
+
+            // Horizantal
+            Renderer.RenderLine(buffer, 10, 10, 10, 30, 1, new Pixel((short)'#', Color.FG_Black, ConsoleColor.Red));
 
 
             string str = "";

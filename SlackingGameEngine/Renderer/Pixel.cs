@@ -11,12 +11,12 @@ public struct Pixel
     /// <summary>
     /// The character that will disblayed represented in unicode 
     /// </summary>
-    [FieldOffset(0)] public short Char;
+    [FieldOffset(0)] public Unicode Char;
 
     /// <summary>
     /// The color of the character disblayed, the 0b00001111 bits are forground color, and 0b11110000 is background color. All using the ConsoleColor enum.
     /// </summary>
-    [FieldOffset(2)] public short Color;
+    [FieldOffset(2)] public Color Color;
 
 
     public unsafe Pixel(uint pixel)
@@ -39,6 +39,12 @@ public struct Pixel
     }
 
     public Pixel(short c, byte foreground, byte background)
+    {
+        Char = c;
+        Color = (short)((int)foreground | ((int)background << 4));
+    }
+
+    public Pixel(short c, short foreground, short background)
     {
         Char = c;
         Color = (short)((int)foreground | ((int)background << 4));

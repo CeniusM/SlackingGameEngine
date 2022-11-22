@@ -1,25 +1,14 @@
 ﻿using SlackingGameEngine.Win32Handles;
 using System.Runtime.InteropServices;
-using Unicode = System.Int16;
 
 namespace SlackingGameEngine.Render;
 
 public unsafe class Renderer
 {
     #region Consts
-    //  gradiants
-    /*
-    █ full			= UTF-16 (hex) 0x2588 = alt 219
-    ▓ sort of full	= UTF-16 (hex) 0x2593 = alt 178
-    ▒ half			= UTF-16 (hex) 0x2592 = alt 177
-    ░ low			= UTF-16 (hex) 0x2591 = alt 176
-   ' ' empty		= UTF-16 (hex) 0x20   = spacebar
-    */
-    public const Unicode FULL = 0x2588;
-    public const Unicode HIGH = 0x2593;
-    public const Unicode HALF = 0x2592;
-    public const Unicode LOW = 0x2591;
-    public const Unicode EMPTY = 0x20;
+
+    public const ushort UZero = 0;
+    public const short Zero = 0;
 
     /// <summary>
     /// Range 0 - 4
@@ -81,6 +70,66 @@ public unsafe class Renderer
             for (int j = 0; j < width; j++)
             {
                 ptr[j] = pixel;
+            }
+        }
+    }
+    #endregion
+
+
+    #region LineRender
+    public static void RenderLine(IntPtr pixelBufer, int x1, int y1, int x2, int y2, int width, Pixel pixel) =>
+                       RenderLine((PixelBuffer*)pixelBufer, x1, y1, x2, y2, width, pixel);
+    public static void RenderLine(PixelBuffer* pixelBuffer, int x1, int y1, int x2, int y2, int width, Pixel pixel)
+    {
+        Pixel* buffer = pixelBuffer->buffer;
+        ushort bufferWidth = pixelBuffer->width;
+        ushort bufferHeight = pixelBuffer->height;
+
+        float a = ((float)y2 - y1) / ((float)x2 - x1);
+
+        // Vertical
+        if (float.IsInfinity(a))
+        {
+            int start = Math.Max(0, Math.Min(y1, y2));
+            int end = Math.Min(bufferHeight, Math.Max(y1, y2)) + 1;
+            int x = Math.Clamp(x1, 0, bufferWidth);
+
+            // moves the line to the left
+            Pixel* line = &buffer[x];
+
+            for (int i = start; i < end; i++)
+                line[i * bufferWidth] = pixel;
+        }
+
+        // Horizantal
+        else if (!float.IsNormal(a))
+        {
+            int start = Math.Max(0, Math.Min(x1, x2));
+            int end = Math.Min(bufferWidth, Math.Max(x1, x2)) + 1;
+            int y = Math.Clamp(y1, 0, bufferHeight);
+            Pixel* Line = &buffer[y * bufferWidth];
+            for (int i = start; i < end; i++)
+                Line[i] = pixel;
+        }
+
+        // Normal
+        else
+        {
+            //float xStart = Math.Min(x1, x2);
+            //float yStart = Math.Min(y1, y2);
+            //float xEnd = Math.Max(x1, x2);
+            //float yEnd = Math.Max(y1, y2);
+
+            float b = y1 - (x1 * a);
+
+            int xStart = Math.Min(x1, x2);
+            int xEnd = Math.Max(x1, x2) + 1;
+
+            for (int x = xStart; x < xEnd; x++)
+            {
+                // y = ax+b
+                int y = (int)(x * a + b);
+                buffer[y * bufferWidth + x] = pixel;
             }
         }
     }

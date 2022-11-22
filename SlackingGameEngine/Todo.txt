@@ -8,9 +8,11 @@
 
 - Fix RenderRect drawing behind the allocated array
 
-- Fix up the keyboard class and key enums
+- Fix the keyboard class and key enums
 
 - Fix the flags of the command prompt (Mouse selecting)
+
+- Fix all the difrent usses of int, uint, short, ushort
 
 - Clean up the CommandPrompt handle
 
