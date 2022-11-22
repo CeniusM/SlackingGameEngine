@@ -14,6 +14,8 @@
 
 - Fix all the difrent usses of int, uint, short, ushort
 
+- Make it so the keyboard class only updates when the user is activly using the command prompt
+
 - Clean up the CommandPrompt handle
 
 - Added more acsesebility for the user to change the command prompt via the CommandPropmt Handlers methods
