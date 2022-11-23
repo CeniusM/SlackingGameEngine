@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace SlackingGameEngine.Render;
+namespace SlackingGameEngine.Rendering;
 
 [StructLayout(LayoutKind.Sequential)]
 public struct Unicode

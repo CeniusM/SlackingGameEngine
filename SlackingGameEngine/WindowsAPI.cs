@@ -1,6 +1,6 @@
 ﻿using Microsoft.Win32.SafeHandles;
 using System.Runtime.InteropServices;
-using SlackingGameEngine.Render;
+using SlackingGameEngine.Rendering;
 
 namespace SlackingGameEngine;
 

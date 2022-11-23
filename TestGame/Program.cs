@@ -1,6 +1,6 @@
 ﻿using SlackingGameEngine.Win32Handles;
 using System.Diagnostics;
-using SlackingGameEngine.Render;
+using SlackingGameEngine.Rendering;
 
 namespace TestGame;
 

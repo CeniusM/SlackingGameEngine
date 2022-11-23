@@ -1,7 +1,7 @@
 ﻿using SlackingGameEngine.Win32Handles;
 using System.Runtime.InteropServices;
 
-namespace SlackingGameEngine.Render;
+namespace SlackingGameEngine.Rendering;
 
 public unsafe class Renderer
 {

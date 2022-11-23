@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using SlackingGameEngine.Win32Handles;
-using SlackingGameEngine.Render;
+using SlackingGameEngine.Rendering;
 using SlackingGameEngine.Utility;
 
 namespace SlackingGameEngine;
@@ -15,6 +15,7 @@ public unsafe class SlackingGameEngine
     internal PixelBuffer* activeBuffer;
     internal Allocator allocator;
     public KeyBoard KeyBoard;
+    public Cursor Cursor;
 
     public SlackingGameEngine(ushort width, ushort height)
     {
@@ -27,6 +28,7 @@ public unsafe class SlackingGameEngine
         allocator = new Allocator();
 
         KeyBoard = new KeyBoard(allocator);
+        Cursor = new Cursor();
     }
 
     /// <summary>

@@ -1,5 +1,5 @@
 ﻿using SlackingGameEngine;
-using SlackingGameEngine.Render;
+using SlackingGameEngine.Rendering;
 using SlackingGameEngine.Utility;
 
 namespace Game;

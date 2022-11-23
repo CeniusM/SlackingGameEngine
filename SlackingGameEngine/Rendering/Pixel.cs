@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace SlackingGameEngine.Render;
+namespace SlackingGameEngine.Rendering;
 
 /// <summary>
 /// Used as a pixel on the command prompt. Has the size of an uint
