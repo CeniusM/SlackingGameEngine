@@ -4,7 +4,21 @@ using SlackingGameEngine.Utility;
 
 var engine = new SlackingGameEngine.SlackingGameEngine(200, 100);
 
+engine.Start();
 
-Console.WriteLine("hello mofo");
+KeyBoard keyBoard = engine.KeyBoard;
 
-Console.ReadLine();
+float x = 0;
+float y = 50;
+float w = 20;
+float h = 10;
+float xVec = 0;
+float yVec = 0;
+
+while (true)
+{
+    if (keyBoard.IsKeyPressed(' '))
+        yVec += 1f;
+
+
+}

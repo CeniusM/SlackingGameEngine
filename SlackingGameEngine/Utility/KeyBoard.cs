@@ -1,4 +1,4 @@
-﻿
+﻿using SlackingGameEngine.Win32Handles;
 
 namespace SlackingGameEngine.Utility;
 
@@ -34,8 +34,10 @@ public unsafe class KeyBoard
         Pressed = &ptr[256 * 3];
     }
 
-    internal unsafe void Update(byte* keyStates)
+    internal unsafe void Update(KeyboardHandle handle)
     {
+        byte* keyStates = handle.keyStates;
+
         // Key keyStates into Pressed
         for (int i = 0; i < 256; i++)
             Pressed[i] = ((keyStates[i] & 0x80) == 0x80);

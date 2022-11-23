@@ -12,15 +12,20 @@ public unsafe class SlackingGameEngine
 {
     internal CommandPromptHandle cmdHandle;
     internal KeyboardHandle keyboardHandle;
+    internal CursorHandle cursorHandle;
     internal PixelBuffer* activeBuffer;
     internal Allocator allocator;
-    public KeyBoard KeyBoard;
-    public Cursor Cursor;
+    internal KeyBoard KeyBoard;
+    internal Cursor Cursor;
+
+    public Cursor GetCursorController() => Cursor;
+    public KeyBoard GetKeyBoardController() => KeyBoard;
 
     public SlackingGameEngine(ushort width, ushort height)
     {
         cmdHandle = new CommandPromptHandle();
         keyboardHandle = new KeyboardHandle();
+        cursorHandle = new CursorHandle();
 
         activeBuffer = PixelBuffer.GetNewPixelBuffer(width, height);
         cmdHandle.SetWindowSizeToBuffer(activeBuffer);
@@ -57,7 +62,9 @@ public unsafe class SlackingGameEngine
     public void Update()
     {
         keyboardHandle.Update();
-        KeyBoard.Update(keyboardHandle.keyStates);
+        KeyBoard.Update(keyboardHandle);
+        cursorHandle.Update();
+        Cursor.Update(cursorHandle);
     }
 
     public bool ShowFPS = false;
