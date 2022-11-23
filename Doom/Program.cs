@@ -153,8 +153,8 @@ class Doom
                 const float StepSize = 0.001f;
                 float xPos = PlayerX;
                 float yPos = PlayerY;
-                float xVec = MathF.Cos(PlayerAngle + FOV / ScreenWidth * (i - ScreenWidth / 2)) * StepSize;
-                float yVec = MathF.Sin(PlayerAngle + FOV / ScreenWidth * (i - ScreenWidth / 2)) * StepSize;
+                float xVec = MathF.Cos(PlayerAngle + FOV / 2 / ScreenWidth * (i - ScreenWidth / 2)) * StepSize;
+                float yVec = MathF.Sin(PlayerAngle + FOV / 2 / ScreenWidth * (i - ScreenWidth / 2)) * StepSize;
 
                 if (i == 0)
                     DebugMessage += xVec.ToString();

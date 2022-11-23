@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestGame", "TestGame\TestGa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doom", "Doom\Doom.csproj", "{19B66294-3F21-416D-BAA4-3F88FA4F30FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorPalette", "ColorPalette\ColorPalette.csproj", "{0C7FB372-4790-4BA3-84A3-647412A1BF78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ColorPalette", "ColorPalette\ColorPalette.csproj", "{0C7FB372-4790-4BA3-84A3-647412A1BF78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestCursor", "TestCursor\TestCursor.csproj", "{3D804C1D-0DC1-4B8E-A5BE-DBD2FB6BC471}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{0C7FB372-4790-4BA3-84A3-647412A1BF78}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C7FB372-4790-4BA3-84A3-647412A1BF78}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C7FB372-4790-4BA3-84A3-647412A1BF78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D804C1D-0DC1-4B8E-A5BE-DBD2FB6BC471}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D804C1D-0DC1-4B8E-A5BE-DBD2FB6BC471}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D804C1D-0DC1-4B8E-A5BE-DBD2FB6BC471}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D804C1D-0DC1-4B8E-A5BE-DBD2FB6BC471}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

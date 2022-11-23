@@ -1,6 +1,8 @@
 ﻿using Microsoft.Win32.SafeHandles;
 using System.Runtime.InteropServices;
 using SlackingGameEngine.Rendering;
+using HANDLE = System.IntPtr;
+using DWORD = System.UInt32;
 
 namespace SlackingGameEngine;
 
@@ -26,6 +28,7 @@ internal unsafe class WindowsAPI
 
 
     internal const int STD_OUTPUT_HANDLE = -11;
+    internal const int STD_INPUT_HANDLE = -10;
     internal const int TMPF_TRUETYPE = 4;
     internal const int LF_FACESIZE = 32;
     internal static IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
@@ -68,4 +71,49 @@ internal unsafe class WindowsAPI
         internal int FontWeight;
         internal fixed char FaceName[LF_FACESIZE];
     }
+
+    [DllImport("user32.dll")]
+    internal static extern int ShowCursor(bool bShow);
+
+    [DllImport("CoreDll.dll")]
+    internal static extern bool SetCursorPos(int X, int Y);
+
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool GetCursorPos(out POINT point);
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct POINT
+    {
+        public Int32 X;
+        public Int32 Y;
+    }
+
+
+    internal enum ConsoleModeFlags : uint
+    {
+        ENABLE_ECHO_INPUT = 0x0004,
+        ENABLE_INSERT_MODE = 0x0020,
+        ENABLE_LINE_INPUT = 0x0002,
+        ENABLE_MOUSE_INPUT = 0x0010,
+        ENABLE_PROCESSED_INPUT = 0x0001,
+        ENABLE_QUICK_EDIT_MODE = 0x0040,
+        ENABLE_WINDOW_INPUT = 0x0008,
+        ENABLE_VIRTUAL_TERMINAL_INPUT = 0x0200,
+        ENABLE_EXTENDED_FLAGS = 0x0080
+    }
+
+    [DllImport("Kernel32.dll")]
+    internal static extern bool SetConsoleMode(
+        HANDLE hConsoleHandle,
+        DWORD dwMode
+        );
+
+    [DllImport("Kernel32.dll")]
+    internal static extern bool FlushConsoleInputBuffer(
+      HANDLE hConsoleInput
+    );
+
+    [DllImport("Kernel32.dll")]
+    internal static extern bool AllocConsole();
 }

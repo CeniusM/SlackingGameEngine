@@ -10,15 +10,23 @@ internal unsafe class CommandPromptHandle
     SafeFileHandle handle;
 
     IntPtr stdHandle;
+    IntPtr stdHandleIn;
 
     internal CommandPromptHandle()
     {
+        // Gets a console if this proces dosent allready have one
+        WindowsAPI.AllocConsole();
+
         // Get cmd buffer
         handle = WindowsAPI.CreateFile("CONOUT$", 0x40000000, 2, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
         if (handle.IsInvalid)
             throw new Exception("Were not able to create cmd SafeFileHandle");
 
         stdHandle = WindowsAPI.GetStdHandle(WindowsAPI.STD_OUTPUT_HANDLE);
+        stdHandleIn = WindowsAPI.GetStdHandle(WindowsAPI.STD_INPUT_HANDLE);
+
+        WindowsAPI.SetConsoleMode(stdHandleIn, (uint)WindowsAPI.ConsoleModeFlags.ENABLE_EXTENDED_FLAGS);
+        WindowsAPI.FlushConsoleInputBuffer(stdHandleIn);
     }
 
     internal (short X, short Y) GetFontSize()
@@ -111,9 +119,8 @@ internal unsafe class CommandPromptHandle
 
 
 
-    //~CommandPromptHandle()
-    //{
-    //    if (buffer is not null)
-    //        Marshal.FreeHGlobal((IntPtr)buffer);
-    //}
+    ~CommandPromptHandle()
+    {
+        handle.Dispose();
+    }
 }
