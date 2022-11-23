@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
+
 namespace SlackingGameEngine.Utility;
 
 /// <summary>
@@ -22,6 +23,17 @@ internal class Allocator
 
         AllocatedMemory.Add(ptr, bytes);
         BytesAllocated += bytes;
+
+        return ptr;
+    }
+
+    internal unsafe IntPtr GetUnsafeMemory<T>(int Items) where T : unmanaged
+    {
+        int size = sizeof(T) * Items;
+        IntPtr ptr = Marshal.AllocHGlobal(size);
+
+        AllocatedMemory.Add(ptr, size);
+        BytesAllocated += size;
 
         return ptr;
     }
