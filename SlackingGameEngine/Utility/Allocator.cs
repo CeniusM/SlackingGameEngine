@@ -59,8 +59,7 @@ internal class Allocator
         var Values = AllocatedMemory.ToList();
         for (int i = 0; i < Values.Count(); i++)
         {
-            AllocatedMemory.Remove(Values[i].Key, out int value);
-            BytesAllocated -= value;
+            FreePointer(Values[i].Key);
         }
     }
 }
