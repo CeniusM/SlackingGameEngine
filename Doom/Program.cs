@@ -18,7 +18,7 @@ class Doom
         // Init engine
         SlackingGameEngine.SlackingGameEngine engine = new SlackingGameEngine.SlackingGameEngine(ScreenWidth, ScreenHeight);
 
-        KeyBoard keyBoard = engine.KeyBoard;
+        KeyBoard keyBoard = engine.GetKeyBoardController();
 
         engine.Start();
         engine.ShowFPS = true;

@@ -75,7 +75,7 @@ internal unsafe class WindowsAPI
     [DllImport("user32.dll")]
     internal static extern int ShowCursor(bool bShow);
 
-    [DllImport("CoreDll.dll")]
+    [DllImport("user32.dll")]
     internal static extern bool SetCursorPos(int X, int Y);
 
     [DllImport("user32.dll")]

@@ -44,6 +44,8 @@ public unsafe class Renderer
     public const int BACKGROUND_MASK = 0b11110000;
     #endregion
 
+    public static void Clear(IntPtr buffer) =>
+                       Clear((PixelBuffer*)buffer, new Pixel(0));
     public static void Clear(IntPtr buffer, Pixel pixel) =>
                        Clear((PixelBuffer*)buffer, pixel);
     public static void Clear(PixelBuffer* buffer, Pixel pixel)

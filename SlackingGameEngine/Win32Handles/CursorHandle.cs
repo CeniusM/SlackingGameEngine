@@ -36,4 +36,9 @@ internal class CursorHandle
         x = point.X;
         y = point.Y;
     }
+
+    ~CursorHandle()
+    {
+        ShowCursor(true);
+    }
 }
